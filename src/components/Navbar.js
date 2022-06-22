@@ -7,7 +7,7 @@ const Navbar = () => {
   return (
     <nav className="nav-container">
         <Logo />
-        <Login />
+        {/* <Login /> */}
         <ProjectHeader />
     </nav>
   )

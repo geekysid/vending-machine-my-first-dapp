@@ -1,8 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import WalletConnect from './WalletConnect';
+import VendingMachine from './VendingMachine';
+import UserContext from '../context/userContext';
+
 
 const Home = () => {
+  const { userAddressState } = useContext(UserContext);
+
   return (
-    <div className="home">HOME</div>
+      <div className="home">
+        <div className="home--section">
+          { userAddressState ? <VendingMachine /> : <WalletConnect /> }
+        </div>
+      </div>
   )
 }
 

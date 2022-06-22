@@ -27,6 +27,14 @@ body {
     font-weight: 500;
 }
 
+.bold {
+    font-weight: 700;
+}
+
+.bolder {
+    font-weight: 900;
+}
+
 .project-header {
     font-size: var(--big-font);
     text-transform: uppercase;
@@ -53,7 +61,6 @@ body {
     cursor: pointer;
 }
 
-
 .nav-container--header {
     /* margin-left: auto; */
     padding: 0 10px;
@@ -66,6 +73,64 @@ body {
 .home {
     height: calc(100vh - var(--nav-height) - var(--footer-height));
     background: var(--background-gray);
+}
+
+.home--section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    width: 100%;
+}
+
+.home--section--login-box {
+    margin-top: 10vh;
+    width: 300px;
+    height: 300px;
+    border: 8px solid var(--background-black);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-box--header {
+    background: var(--background-black);
+    padding: 5px 0 12px 0;
+    width: 100%;
+    text-align: center;
+    font-size: var(--big-font);
+}
+
+.login-box--main {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box--main--btn {
+    background: var(--background-black);
+    border-radius: 5px;
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--white);
+    transition: all 250ms;
+}
+
+.login-box--main--btn:hover{
+    background: none;
+    border: 3px solid var(--background-black);
+    color: var(--background-black);
+}
+
+.login-box--main--btn-text{
+    padding: 10px;
+    text-transform: uppercase;
 }
 
 .footer-container {
