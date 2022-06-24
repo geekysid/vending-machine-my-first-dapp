@@ -69,6 +69,7 @@ const deploy = async (contract, network) => {
 //             `export const ContractAddress = "${contractAddress}"
 // export const OwnerAddress = "${accounts[0]}"`
 //         );
+        console.log(`-------- Compiled Data Saved`);
     } else {
         console.log("Something went wrong while fetching Either of Web3, ABI or ByteCode.")
     }

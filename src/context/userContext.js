@@ -1,20 +1,28 @@
 import  { createContext, useEffect, useState } from 'react';
+import { OwnerAddress } from '../ContractAddress_local';
 
 const UserContext = createContext();
 
 export const UserStateProvider = ({children}) => {
     UserStateProvider.displayName = "UserStateProvider";
     const [userAddressState, setUserAddressState] = useState()
+    const [isOwnerState, setIsOwnersState] = useState()
     let accounts = "";
 
     // useEffect(() => { connectToWallet() }, [])
 
     useEffect( () => {
-        console.log(`Accounts useEffect: ${userAddressState}`);
+        // console.log(`Accounts useEffect: ${userAddressState}`);
         if (!accounts) {
             updateAddress()
         }
     }, [])
+
+    // update userAddressStateand isOwnerState
+    const updateUserContext = account => {
+        setUserAddressState(account);
+        setIsOwnersState(OwnerAddress.toLowerCase() === account.toLowerCase() ? true : false)
+    }
 
     // checking address when page loads
     const updateAddress = async () => {
@@ -22,7 +30,7 @@ export const UserStateProvider = ({children}) => {
             accounts = await window.ethereum.request({
                 method: 'eth_accounts'
             });
-            setUserAddressState(accounts[0]);
+            updateUserContext(accounts[0]);
         } else {
             alert ("please install metamask extension to access this website.")
         }
@@ -34,8 +42,8 @@ export const UserStateProvider = ({children}) => {
             accounts = await window.ethereum.request({
                 method: 'eth_accounts'
             });
-            setUserAddressState(accounts[0]);
-            alert(`Your address is: ${accounts[0]}`)
+            updateUserContext(accounts[0]);
+            // alert(`Your address is: ${accounts[0]}`)
         } else {
             alert ("please install metamask extension to access this website.")
         }
@@ -47,14 +55,14 @@ export const UserStateProvider = ({children}) => {
             accounts = await window.ethereum.request({
                 method: 'eth_requestAccounts'
             });
-            setUserAddressState(accounts[0]);
+            updateUserContext(accounts[0]);
         } else {
             alert ("please install metamask extension to access this website.")
         }
     }
 
     return (
-        <UserContext.Provider value={{ userAddressState, connectToWallet, onAddressChange }} >
+        <UserContext.Provider value={{ userAddressState, isOwnerState, connectToWallet, onAddressChange }} >
             {children}
         </UserContext.Provider>
     )
