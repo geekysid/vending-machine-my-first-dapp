@@ -31,6 +31,21 @@ const getCompiledData = contract => {
     };
 }
 
+// saving contracts metedata to src folder
+const saveMetedata = (contractAddress, ownerAddress, network) => {
+    const folderPath = path.resolve(__dirname, 'src');
+    fs.ensureDir(folderPath);
+    const filePath = path.resolve(folderPath, `ContractAddress_${network}.js`);
+
+    fs.writeFileSync(
+        filePath,
+        `export const VendingMachineContractAddress = "${contractAddress}";
+export const OwnerAddress = "${ownerAddress}";
+export const Network = "${network}";`);
+
+    console.log(`Metadata saved to ${filePath}`);
+}
+
 // deploy a given contract
 const deploy = async (contract, network) => {
     const web3 = getWeb3Instance(network);                      // settingup web3 instance
@@ -48,15 +63,15 @@ const deploy = async (contract, network) => {
         console.log(`-------- Contract Deployed`);
 
         const contractAddress = deployedContract.options.address;
-
-        fs.writeFileSync(
-            `ContractAddress-script--${network}.js`,
-            `export const ContractAddress = "${contractAddress}"
-export const OwnerAddress = "${accounts[0]}"`
-        );
+        saveMetedata(contractAddress, accounts[0], network);
+//         fs.writeFileSync(
+//             `ContractAddress-script--${network}.js`,
+//             `export const ContractAddress = "${contractAddress}"
+// export const OwnerAddress = "${accounts[0]}"`
+//         );
     } else {
         console.log("Something went wrong while fetching Either of Web3, ABI or ByteCode.")
     }
 }
 
-deploy('VendingMachine', 'rinkeby')
+deploy('VendingMachine', 'local')
