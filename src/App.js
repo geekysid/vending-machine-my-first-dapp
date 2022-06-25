@@ -4,7 +4,7 @@ import './style.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
-import ContractContext from './context/ContractContext'
+import { ContractContextProvider } from './context/ContractContext'
 
 const App = () => {
 
@@ -18,7 +18,6 @@ const App = () => {
   window.ethereum.on('accountsChanged', account => {
     console.log(`Account changed: ${account[0]}`)
     onAddressChange();
-
   });
 
   window.ethereum.on('disconnect', () => {
@@ -28,9 +27,9 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <ContractContext>
+      <ContractContextProvider>
         <Home />
-      </ContractContext>
+      </ContractContextProvider>
       <Footer />
     </>
   )

@@ -1,8 +1,11 @@
 :root {
-    --background-black: #191919;
-    --background-gray: #2a2a2a;
+    --black: #191919;
+    --gray: #2a2a2a;
+    --red: #f87272;
     --white: #e9e9E9;
+    --smallest-font: 0.70rem;
     --small-font: 0.75rem;
+    --medium-font: 0.85rem;
     --big-font: 1rem;   /* used in project header*/
     --nav-height: 63px;
     --footer-height: 35px;
@@ -36,9 +39,13 @@ body {
 }
 
 .project-header {
-    font-size: var(--big-font);
+    font-size: var(--small-font);
     text-transform: uppercase;
     font-weight: 700;
+}
+
+.smallest-font {
+    font-size: var(--smallest-font);
 }
 
 .img {
@@ -52,7 +59,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--background-black);
+    background: var(--black);
 }
 
 .nav-conatiner--logo {
@@ -71,8 +78,8 @@ body {
 }
 
 .home {
-    height: calc(100vh - var(--nav-height) - var(--footer-height));
-    background: var(--background-gray);
+    min-height: calc(100vh - var(--nav-height) - var(--footer-height));
+    background: var(--gray);
 }
 
 .home--section {
@@ -87,7 +94,7 @@ body {
     margin-top: 10vh;
     width: 300px;
     height: 300px;
-    border: 8px solid var(--background-black);
+    border: 8px solid var(--black);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
@@ -95,8 +102,51 @@ body {
     justify-content: center;
 }
 
+.address-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.address-holder--avatar {
+    padding:1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.address-holder--avatar--img {
+    width: 100%;
+    height: 100%;
+}
+
+.address-holder--text{
+    margin-left: 5px;
+}
+
+.address-holder--disconnect {
+    margin-left: 5px;
+    background: #f87272;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    transition: all 250ms;
+}
+
+.address-holder--disconnect:hover {
+    transform: scale(1.05);
+}
+
+.address-holder--disconnect-img {
+    padding: 2px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .login-box--header {
-    background: var(--background-black);
+    background: var(--black);
     padding: 5px 0 12px 0;
     width: 100%;
     text-align: center;
@@ -112,7 +162,7 @@ body {
 }
 
 .login-box--main--btn {
-    background: var(--background-black);
+    background: var(--black);
     border-radius: 5px;
     width: 60%;
     display: flex;
@@ -124,8 +174,8 @@ body {
 
 .login-box--main--btn:hover{
     background: none;
-    border: 3px solid var(--background-black);
-    color: var(--background-black);
+    border: 3px solid var(--black);
+    color: var(--black);
 }
 
 .login-box--main--btn-text{
@@ -133,9 +183,177 @@ body {
     text-transform: uppercase;
 }
 
+.vending-machine {
+    margin: 50px 0;
+    width: 60vw;
+    min-width: 400px;
+    max-width: 600px;
+    border: 4px solid var(--red);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.vending-machine--header {
+    background: var(--red);
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    color: var(--black);
+    text-transform: uppercase;
+    /* letter-spacing: px; */
+}
+
+.vending--section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+    height: 100%;
+    font-size: var(--medium-font);
+}
+
+.vending--section--heading {
+    margin-right: auto;
+    margin-left: 15px;
+}
+
+.vending--section--row--add-item {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    width: 95%;
+}
+
+.vending--section--row--add-item > .vending--section--row--img {
+    display: flex;
+    align-items: center;
+    width: 18%;
+}
+.vending--section--row--add-item > .vending--section--row--img > input {
+    display: none;
+}
+.vending--section--row--add-item > .vending--section--row--img > div {
+    width: 100%;
+    max-width: 100px;
+    padding: 4px 1px;
+}
+.vending--section--row--add-item > .vending--section--row--title {
+    width: 38%;
+}
+.vending--section--row--add-item > .vending--section--row--price {
+    width: 15%;
+}
+.vending--section--row--add-item > .vending--section--row--input {
+    width: 15%;
+}
+.vending--section--row--add-item > .vending--section--row--buyBtn {
+    width: 15%;
+    height: 100%;
+    min-width: 35px;
+}
+
+.vending--section--filters {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vending--section--filters--item {
+    margin-bottom: 10px;
+    background: var(--red);
+    padding: 3px 5px;
+    border-radius: 3px;
+    color: var(--black);
+    transition: all 250ms;
+    cursor: pointer;
+}
+.vending--section--filters--item:hover {
+    border: 1px solid var(--red);
+    background: none;
+    color: var(--red);
+}
+
+.vending--section--row {
+    margin: 7px 0;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    width: 95%;
+}
+
+.vending--section--row--img {
+    width: 7%;
+    height: 100%;
+}
+.vending--section--row--img > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 5px;
+}
+
+.vending--section--row--title {
+    width: 43%;
+    display: flex;
+    align-items: center;
+}
+.vending--section--row--title > span {
+    padding: 5px;
+}
+
+.vending--section--row--price {
+    width: 18%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.vending--section--row--price > span {
+    padding: 5px 10px 5px 5px;
+}
+
+.vending--section--row--input {
+    width: 14%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vending--section--row--input > span {
+    padding: 5px;
+}
+
+.vending--section--row--buyBtn {
+    width: 18%;
+    min-width: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--red);
+    border-radius: 4px;
+    border: 1px solid var(--red);
+    cursor: pointer;
+    transition: all 250ms;
+}
+.vending--section--row--buyBtn:hover {
+    color: var(--black);
+    border-radius: 4px;
+    /* border: 1px solid var(--red); */
+    background: var(--red);
+    cursor: pointer;
+}
+.vending--section--row--buyBtn > span {
+    padding: 5px;
+    font-weight: 600;
+}
+
 .footer-container {
     height: var(--footer-height);
-    background: var(--background-black);
+    background: var(--black);
     font-size: var(--small-font);
     display: flex;
     align-items: center;

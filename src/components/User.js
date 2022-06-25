@@ -1,8 +1,9 @@
-import React from 'react'
+import React from 'react';
+import ShowProducts from './ShowProducts';
 
 const User = () => {
   return (
-    <div>User</div>
+      <ShowProducts />
   )
 }
 

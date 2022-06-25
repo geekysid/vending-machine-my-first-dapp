@@ -1,10 +1,19 @@
 import React, { useContext } from 'react';
 import UserContext from '../context/userContext';
+import Admin from './Admin';
+import User from './User';
+
 
 const VendingMachine = () => {
-    const { userAddressState } = useContext(UserContext);
+    const { userAddressState, isOwnerState } = useContext(UserContext);
+
     return (
-        <div>You are connected through {userAddressState}</div>
+        <div className="vending-machine">
+            <div className="vending-machine--header bold">
+                <span>Vending Machine</span>
+            </div>
+            {  isOwnerState ? <Admin /> : <User />}
+        </div>
     )
 }
 
