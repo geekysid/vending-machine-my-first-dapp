@@ -20,7 +20,7 @@ const saveABItoSrc = (contract, compiledContract) => {
 
     fs.writeFileSync(
         path.resolve(AbiFilePath, `${contract}ABI.js`),
-        `export default ABI = ${JSON.stringify(compiledContract["abi"])}`);
+        `export const ABI = '${JSON.stringify(compiledContract["abi"])}';`);
 
     console.log(`ABI saved to ${AbiFilePath}`);
 }
