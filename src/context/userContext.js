@@ -19,7 +19,7 @@ export const UserStateProvider = ({children}) => {
     }, [])
 
     // update userAddressStateand isOwnerState
-    const updateUserContext = account => {
+    const updateUserContext = (account) => {
         setUserAddressState(account);
         setIsOwnersState(OwnerAddress.toLowerCase() === account.toLowerCase() ? true : false)
     }
@@ -30,7 +30,7 @@ export const UserStateProvider = ({children}) => {
             accounts = await window.ethereum.request({
                 method: 'eth_accounts'
             });
-            updateUserContext(accounts[0]);
+            if (accounts.length > 0) updateUserContext(accounts[0]);
         } else {
             alert ("please install metamask extension to access this website.")
         }
@@ -61,8 +61,15 @@ export const UserStateProvider = ({children}) => {
         }
     }
 
+    // diconnect wallet
+    const disconnectWallet = () => {
+        setUserAddressState();
+        setIsOwnersState(false);
+        alert("You are only disconnected temporarily.\nPlease discconect from your wallet to be disconnected properly.")
+    }
+
     return (
-        <UserContext.Provider value={{ userAddressState, isOwnerState, connectToWallet, onAddressChange }} >
+        <UserContext.Provider value={{ userAddressState, isOwnerState, connectToWallet, onAddressChange, disconnectWallet }} >
             {children}
         </UserContext.Provider>
     )
