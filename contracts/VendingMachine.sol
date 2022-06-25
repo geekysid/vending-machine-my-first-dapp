@@ -260,8 +260,8 @@ contract VendingMachine {
         * @param _amount uint256 amount that owner wishes to withdraw
     */
     function withdraw(uint256 _amount) external onlyOwner  {
-        require(address(this).balance >= (_amount * 1 ether), "Not enough balance to withdraw");
-        (bool _success, ) = payable(msg.sender).call{value: _amount * 1 ether}("");     // transfering funds
+        require(address(this).balance >= _amount, "Not enough balance to withdraw");
+        (bool _success, ) = payable(msg.sender).call{value: _amount}("");     // transfering funds
 
         //  if transfer succeed
         if (_success) {
@@ -279,7 +279,7 @@ contract VendingMachine {
     function purchase(uint256 _productID, uint256 _quantity) payable external productExists(_productID)
         productIsActive(_productID) productIsInStock(_productID, _quantity) productQuantityIsAvailable(_productID, _quantity) 
     {
-        uint256 _totalPrice = product[_productID].price * _quantity * 1 ether;      // total price of transaction
+        uint256 _totalPrice = product[_productID].price * _quantity;      // total price of transaction
         require(
             msg.value >= _totalPrice,
             string.concat("Need a minmum of ", Strings.toString(_totalPrice), "WEI to purchase.")
@@ -328,6 +328,6 @@ contract VendingMachine {
         * @return _balance uint256 balance of contract
     */
     function getContractBalance() external onlyOwner view returns (uint256) {
-        return address(this).balance / 1 ether;
+        return address(this).balance;
     }
 }
