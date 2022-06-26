@@ -1,14 +1,17 @@
 import React, { useContext } from 'react';
-import UserContext from './context/userContext';
 import './style.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
-import { ContractContextProvider } from './context/ContractContext'
+import UserContext from './context/userContext';
+import { ContractContextProvider } from './context/ContractContext';
+import SpinnerContext from './context/SpinnerContext';
+import Spinner from './components/Spinner';
 
 const App = () => {
 
   const { userAddressState, onAddressChange } = useContext(UserContext);
+  const { spinnerState } = useContext(SpinnerContext);
   // const { userAddressState, onAddressChange } = useContext(UserContext);
 
   window.ethereum.on('chainChanged', chainID => {
@@ -26,11 +29,16 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
-      <ContractContextProvider>
-        <Home />
-      </ContractContextProvider>
-      <Footer />
+        {
+          spinnerState
+          &&
+          <Spinner />
+        }
+        <Navbar />
+        <ContractContextProvider>
+          <Home />
+        </ContractContextProvider>
+        <Footer />
     </>
   )
 }

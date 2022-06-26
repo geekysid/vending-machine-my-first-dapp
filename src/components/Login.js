@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import UserContext from '../context/userContext';
 
 const Login = () => {

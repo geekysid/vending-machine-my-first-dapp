@@ -5,11 +5,6 @@ import ShowProducts from './ShowProducts';
 import AddProducts from './AddProducts';
 
 const Admin = () => {
-  const getProducts = async () => {
-    const b = await ContractInstance.methods.getAllProductIDToProductName().call()
-    console.log(b);
-  }
-
   return (
     <>
       <AddProducts />

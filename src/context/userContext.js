@@ -1,5 +1,6 @@
-import  { createContext, useEffect, useState } from 'react';
+import  { createContext, useEffect, useState, useContext } from 'react';
 import { OwnerAddress } from '../ContractAddress_local';
+import SpinnerContext from '../context/SpinnerContext';
 
 const UserContext = createContext();
 
@@ -7,6 +8,7 @@ export const UserStateProvider = ({children}) => {
     UserStateProvider.displayName = "UserStateProvider";
     const [userAddressState, setUserAddressState] = useState()
     const [isOwnerState, setIsOwnersState] = useState()
+    const { activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
     let accounts = "";
 
     // useEffect(() => { connectToWallet() }, [])
@@ -26,6 +28,7 @@ export const UserStateProvider = ({children}) => {
 
     // checking address when page loads
     const updateAddress = async () => {
+        activateSpinner();
         if (window.ethereum) {
             accounts = await window.ethereum.request({
                 method: 'eth_accounts'
@@ -34,10 +37,12 @@ export const UserStateProvider = ({children}) => {
         } else {
             alert ("please install metamask extension to access this website.")
         }
+        deactivateSpinner();
     }
 
     // handelimg change in address
     const onAddressChange =  async () => {
+        activateSpinner();
         if (window.ethereum) {
             accounts = await window.ethereum.request({
                 method: 'eth_accounts'
@@ -47,10 +52,12 @@ export const UserStateProvider = ({children}) => {
         } else {
             alert ("please install metamask extension to access this website.")
         }
+        deactivateSpinner();
     }
 
     // connecting to wallet
     const connectToWallet = async () => {
+        activateSpinner();
         if (window.ethereum) {
             accounts = await window.ethereum.request({
                 method: 'eth_requestAccounts'
@@ -59,6 +66,7 @@ export const UserStateProvider = ({children}) => {
         } else {
             alert ("please install metamask extension to access this website.")
         }
+        deactivateSpinner();
     }
 
     // diconnect wallet

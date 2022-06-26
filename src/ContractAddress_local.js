@@ -1,3 +1,3 @@
-export const VendingMachineContractAddress = "0x21b9E836d2e801bAFaAFb4a6dEFEFE92e953D650";
-export const OwnerAddress = "0x139aE086811aCa3D5548A177CBdfB25cecb7250f";
+export const VendingMachineContractAddress = "0x44ed482e8947E9db0DeC8EB58b57fC9cdC0C6204";
+export const OwnerAddress = "0x5B30e5F915cDB53aD4527acAc41ddb4da5f3862D";
 export const Network = "local";

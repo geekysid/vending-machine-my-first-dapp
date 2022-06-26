@@ -1,14 +1,18 @@
-import  { createContext, useEffect, useState } from 'react';
+import  { createContext, useEffect, useState, useContext } from 'react';
 import ContractInstance from '../ContractInstance';
+import SpinnerContext from '../context/SpinnerContext';
 
 const ContractContext = createContext();
 
 export const ContractContextProvider = ({children}) => {
-    const [contractData, setContractData] = useState(false)
+    const [contractData, setContractData] = useState()
+    const { activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
 
     const getContractData = async () => {
+        activateSpinner();
         const data = await ContractInstance.methods.getAllProductIDToProductName().call();
         setContractData(data);
+        deactivateSpinner();
     }
 
     useEffect( () => {
@@ -65,11 +69,16 @@ export const ContractContextProvider = ({children}) => {
     const getFilteredProductsOnStock = filter => {
         const enum_value = getEnumForStock(filter, 'key');
         const filteredProducts = [];
-        contractData.forEach(product => {
-            if (product.productStatus.toString() === enum_value) {
-                filteredProducts.push(product);
-            }
-        });
+        if (contractData){
+            contractData.forEach(product => {
+                if (product.stockStatus.toString() === enum_value) {
+                    filteredProducts.push(product);
+                }
+            });
+        } else {
+            console.log('No Data')
+        }
+        console.log(filteredProducts)
         return filteredProducts
     }
 
@@ -88,30 +97,39 @@ export const ContractContextProvider = ({children}) => {
               break;
           }
         const filteredProducts = [];
-        contractData.forEach(product => {
-            if (product.productStatus.toString() === enum_value) {
-                filteredProducts.push(product);
-            }
-        });
+
+        if (contractData){
+            contractData.forEach(product => {
+                if (product.productStatus.toString() === enum_value) {
+                    filteredProducts.push(product);
+                }
+            });
+        } else {
+            console.log('No Data')
+        }
         return filteredProducts
     }
 
     const getStockFilters = () => {
         let filters = [];
-        contractData.forEach(product => {
-            const status = product.stockStatus;
-            const enum_value = getEnumForStock(status, 'value');
-            if (!filters.includes(enum_value)) {
-                filters.push(enum_value);
-            }
-        });
+        if (contractData){
+            contractData.forEach(product => {
+                const status = product.stockStatus;
+                const enum_value = getEnumForStock(status, 'value');
+                if (!filters.includes(enum_value)) {
+                    filters.push(enum_value);
+                }
+            });
+        } else {
+            console.log('No Data')
+        }
         return filters.sort();
     }
 
     return (
         <ContractContext.Provider value={{
             contractData,
-            setContractData,
+            getContractData,
             getFilteredProductsOnStock,
             getFilteredProductsOnStatus,
             getStockFilters
