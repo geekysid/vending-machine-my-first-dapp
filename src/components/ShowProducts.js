@@ -6,6 +6,7 @@ import web3 from 'web3';
 import { formatException } from '../utils';
 import SpinnerContext from '../context/SpinnerContext';
 import NotificationContext from '../context/NotificationContext';
+const IpfsHttpClient = require("ipfs-http-client");
 
 const ShowProducts = () => {
   const [productsState, setProductsState] = useState([]);
@@ -177,13 +178,38 @@ const ShowProducts = () => {
     activateClick(event.target.parentElement);
   }
 
+  // get image from IPFS
+  const getImageIPFSAsync = async (cid) => {
+    const ipfs = IpfsHttpClient('https://ipfs.infura.io:5001/api/v0')
+    if (cid === "") {
+      return '/images/drinks.png'
+    } else {
+      const exists = (await ipfs.get(cid)).next() !== null;
+      if (exists) {
+        return `https://ipfs.infura.io/ipfs/${cid}`
+      } else {
+        return '/images/drinks.png'
+      }
+    }
+  }
+
+  // get IPFS image Hash
+  const getImageIPFS = cid => {
+    if (cid === "") {
+      return '/images/drinks.png'
+    } else {
+        return `https://ipfs.infura.io/ipfs/${cid}`
+    }
+  }
+
   // function to generate product DOM
   const getProductList = products => {
 
-    const productList = products.map((product, index) => (
+    const productList = products.map((product, index) => {
+      return (
       <div className="vending--section--row" id={product.productID} key={index}>
         <div className="vending--section--row--img">
-          <img src="/images/puppy.png" alt="" />
+          <img src={getImageIPFS(product.imageHash)} alt="" />
         </div>
         <div className="vending--section--row--title">
           <span>{product.productName}</span>
@@ -216,7 +242,7 @@ const ShowProducts = () => {
           }
         </div>
       </div>
-    ));
+    )});
     updateProductState(productList);
   }
 

@@ -14,6 +14,7 @@ contract VendingMachine {
 
     // Product Object
     struct Product {
+        string imageHash;                   // hash of product's image loaded on IPFS
         string productName;                 // name of product
         uint256 productID;                  // ID of product
         uint256 price;                      // price of product
@@ -160,11 +161,12 @@ contract VendingMachine {
         * @param _balance uint256 current stock of product
         * @param _capacity uint256 maximum capacity of stock of product
     */
-    function addNewProduct(string memory _name, uint256 _price, uint256 _balance, uint256 _capacity)
+    function addNewProduct(string memory _imageHash, string memory _name, uint256 _price, uint256 _balance, uint256 _capacity)
             external onlyOwner productNotExists(_name) {
         uint256 _productID = productIDs.length;                 // get a new productID
         productIDs.push(_productID);                            // add productID to list of array that contains all array
         Product storage _product = product[_productID];         // get a new product
+        _product.imageHash = _imageHash;
         _product.productName = _name;
         _product.productID = _productID;
         _product.price = _price;

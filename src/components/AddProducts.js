@@ -2,30 +2,57 @@ import React, { useState, useEffect, useContext } from 'react'
 import ContractInstance from '../ContractInstance';
 import UserContext from '../context/userContext';
 import ContractContext from '../context/ContractContext';
-import web3 from 'web3';
-import { formatException } from '../utils';
 import SpinnerContext from '../context/SpinnerContext';
 import NotificationContext from '../context/NotificationContext';
+import { formatException } from '../utils';
+// import { create } from 'ipfs-http-client';
+import web3 from 'web3';
+require('dotenv').config();
+const IpfsHttpClient = require("ipfs-http-client");
 
 const AddProducts = () => {
     const [ productData, setProductData ] = useState({
+        buffer: "",
         title: "",
         price: "",
         stock: ""
     });
 
     const { userAddressState } = useContext(UserContext);
-    const { activateClick, deactivateClick } = useContext(SpinnerContext);
+    const { activateClick, deactivateClick, activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
     const { contractData, getContractData } = useContext(ContractContext);
     const { updateNotificationState } = useContext(NotificationContext);
 
     useEffect(() => {
         setProductData({
+            buffer: "",
             title: "",
             price: "",
             stock: ""
         });
     }, [contractData])
+
+    // connection to IPFS
+    const IPFS = () => {
+        return IpfsHttpClient('https://ipfs.infura.io:5001/api/v0');
+        // try {
+        //     const auth = "Basic " + Buffer.from(process.env.REACT_APP_INFURA_IPFS_PROJECT_ID + ":" + process.env.REACT_APP_INFURA_IPFS_PROJECT_SECRET).toString("base64");
+        //     return IpfsHttpClient({
+        //         host: "ipfs.infura.io",
+        //         port: 5001,
+        //         protocol: "https",
+        //         headers: {
+        //             authorization: auth,
+        //         },
+        //     });
+        // } catch(e) {
+        //     updateNotificationState(true, {
+        //         type: 'error',
+        //         title: 'error',
+        //         message: e.message
+        //     });
+        // }
+    }
 
     //  making sure stock is a positive number
     const validatePrice = event => {
@@ -73,16 +100,51 @@ const AddProducts = () => {
         })
     }
 
+    const fileChangeHandler = async (event) => {
+        activateSpinner();
+        const file = event.target.files[0];
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onloadend = async () => {
+            const buffer = Buffer(reader.result);
+            const ipfs = IPFS();
+            let imageHash;
+            if (ipfs) {
+                const uplodedFile = await ipfs.add(buffer);
+                for await (const item of uplodedFile) {
+                    imageHash = item.path
+                    updateNotificationState(true, {
+                        type: 'success',
+                        title: 'success',
+                        message: `Image uploaded to IPFS. Image Hash: ${imageHash}`
+                    });
+                    break
+                }
+                setProductData(prevState => {
+                    return {
+                        ...prevState,
+                        imageHash: imageHash
+                    }
+                });
+            }
+        }
+        deactivateSpinner();
+    }
+
     // adding product to blockchain
     const addProduct = async event => {
         deactivateClick(event.target.parentElement);
-        const title = document.getElementById('input-title').value;
-        const price = parseFloat(document.getElementById('input-price').value);
-        const stock = parseFloat(document.getElementById('input-stock').value);
+        // const title = document.getElementById('input-title').value;
+        // const price = parseFloat(document.getElementById('input-price').value);
+        // const stock = parseFloat(document.getElementById('input-stock').value);
+        const imageHash = productData.imageHash;
+        const title = productData.title;
+        const price = productData.price;
+        const stock = productData.stock;
 
-        if (title && price && stock) {
+        if (imageHash && title && price && stock) {
             try {
-                const result = await ContractInstance.methods.addNewProduct(title, web3.utils.toWei(price.toString(), 'ether'), stock, stock).send({
+                const result = await ContractInstance.methods.addNewProduct(imageHash, title, web3.utils.toWei(price.toString(), 'ether'), stock, stock).send({
                     from: userAddressState,
                     gas: 5500000
                 });
@@ -137,8 +199,7 @@ const AddProducts = () => {
                     <div className="vending--section--row--buyBtn smallest-font" onClick={() => document.getElementById('uploadIconBtn').click()} >
                         Upload Icon
                     </div>
-                    <input type="file" accept="image/*" id="uploadIconBtn" name="uploadIconBtn"/>
-
+                    <input type="file" accept="image/*" id="uploadIconBtn" onChange={event => fileChangeHandler(event)} name="uploadIconBtn"/>
                 </div>
                 <div className="vending--section--row--title">
                     <input value={productData.title} type="text" placeholder="enter product descp" name="title" id="input-title" onChange={event => handelChange(event)}/>
