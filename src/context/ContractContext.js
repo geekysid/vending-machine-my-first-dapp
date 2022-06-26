@@ -1,12 +1,23 @@
 import  { createContext, useEffect, useState, useContext } from 'react';
 import ContractInstance from '../ContractInstance';
-import SpinnerContext from '../context/SpinnerContext';
+import SpinnerContext from './SpinnerContext';
+import UserContext from './userContext';
+import { formatException } from '../utils';
 
 const ContractContext = createContext();
 
 export const ContractContextProvider = ({children}) => {
     const [contractData, setContractData] = useState()
+    const [contractBalance, setContractBalance] = useState(0);
     const { activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
+    const { isOwnerState, userAddressState } = useContext(UserContext);
+
+    const fetchContractBalance = async () => {
+        activateSpinner();
+        let data = await ContractInstance.methods.getContractBalance().call();
+        setContractBalance(data);
+        deactivateSpinner();
+    }
 
     const getContractData = async () => {
         activateSpinner();
@@ -17,6 +28,7 @@ export const ContractContextProvider = ({children}) => {
 
     useEffect( () => {
         getContractData();
+        fetchContractBalance();
     }, [])
 
     //  getting all enums for Stock
@@ -76,7 +88,7 @@ export const ContractContextProvider = ({children}) => {
                 }
             });
         } else {
-            console.log('No Data')
+            // console.log('No Data')
         }
         console.log(filteredProducts)
         return filteredProducts
@@ -105,7 +117,7 @@ export const ContractContextProvider = ({children}) => {
                 }
             });
         } else {
-            console.log('No Data')
+            // console.log('No Data')
         }
         return filteredProducts
     }
@@ -121,18 +133,55 @@ export const ContractContextProvider = ({children}) => {
                 }
             });
         } else {
-            console.log('No Data')
+            // console.log('No Data')
         }
         return filters.sort();
+    }
+
+    // only owner to withdraw funds
+    const withdrawFunds = async () => {
+        activateSpinner()
+        if (isOwnerState) {
+            if (contractBalance > 0) {
+                try {
+                    const result = await ContractInstance.methods.withdraw(contractBalance).send({
+                        from: userAddressState,
+                        gas: 5500000
+                    });
+                    if ('WithdrawSuccessfull' in result.events) {
+                        alert(`Transaction Succeessful.\nTransactionHash: ${result.transactionHash}`)
+                        fetchContractBalance();
+                    } else {
+                        console.log(result);
+                    }
+                } catch(e){
+                    if (e.message.includes("while formatting outputs from RPC \'")) {
+                        formatException(e.message);
+                    } else if (e.code === -32603) {
+                        alert("Out of Gas")
+                    } else {
+                        alert(e.message);
+                    }
+                }
+            } else {
+                alert("No balance in contract to withdraw");
+            }
+        } else {
+            alert("Only Owner is allowed to execute this function");
+        }
+        deactivateSpinner();
     }
 
     return (
         <ContractContext.Provider value={{
             contractData,
+            contractBalance,
             getContractData,
             getFilteredProductsOnStock,
             getFilteredProductsOnStatus,
-            getStockFilters
+            getStockFilters,
+            fetchContractBalance,
+            withdrawFunds
         }}>
             {children}
         </ContractContext.Provider>

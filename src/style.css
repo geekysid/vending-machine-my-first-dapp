@@ -195,7 +195,7 @@ body {
     text-transform: uppercase;
 }
 
-.vending-machine {
+.shop {
     margin: 50px 0;
     width: 60vw;
     min-width: 400px;
@@ -207,7 +207,7 @@ body {
     align-items: center;
 }
 
-.vending-machine--header {
+.shop--header {
     background: var(--red);
     padding: 5px;
     width: 100%;
@@ -218,7 +218,7 @@ body {
     /* letter-spacing: px; */
 }
 
-.vending--section {
+.shop--section {
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -227,6 +227,40 @@ body {
     width: 100%;
     height: 100%;
     font-size: var(--medium-font);
+}
+
+.shop--section--withdrawal {
+    padding: 10px 10px 0 10px;
+    width: 100%;
+    display: flex;
+    justify-items: space-around;
+    align-content: space-around;
+}
+
+.shop--section--withdrawal--text {
+    margin-right: auto;
+    display: flex;
+    justify-items: center;
+    align-content: center;
+    padding: 5px 10px;
+}
+
+.shop--section--withdrawal--btn {
+    display: flex;
+    margin-right: 10px;
+}
+
+.shop--section--withdrawal--btn-btn {
+    border: 1px solid var(--red);
+
+    border-radius: 5px;
+    color: var(--red);
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.shop--section--withdrawal--btn-btn:hover {
+        background: var(--red);
+        color: var(--black);
 }
 
 .vending--section--heading {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import WalletConnect from './WalletConnect';
-import VendingMachine from './VendingMachine';
+import Shop from './Shop';
 import UserContext from '../context/userContext';
 
 const Home = () => {
@@ -9,7 +9,7 @@ const Home = () => {
   return (
       <div className="home">
         <div className="home--section">
-          { userAddressState ? <VendingMachine /> : <WalletConnect /> }
+          { userAddressState ? <Shop /> : <WalletConnect /> }
         </div>
       </div>
   )

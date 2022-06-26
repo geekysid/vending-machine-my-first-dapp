@@ -187,7 +187,7 @@ const ShowProducts = () => {
   }
 
   return (
-    <div className="vending--section">
+    <div className="shop--section">
       {
         isOwnerState
         &&

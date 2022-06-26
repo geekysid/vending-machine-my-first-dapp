@@ -5,7 +5,7 @@ import User from './User';
 
 
 const VendingMachine = () => {
-    const { userAddressState, isOwnerState } = useContext(UserContext);
+    const { isOwnerState } = useContext(UserContext);
 
     return (
         <div className="vending-machine">

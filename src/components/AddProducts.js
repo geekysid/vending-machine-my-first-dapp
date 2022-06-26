@@ -99,7 +99,7 @@ const AddProducts = () => {
     }
 
     return (
-        <div className="vending--section">
+        <div className="shop--section">
             <h4 className="vending--section--heading">Add Proucts</h4>
             <div className="vending--section--row--add-item">
                 <div className="vending--section--row--img">
