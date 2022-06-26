@@ -1,6 +1,7 @@
 import  { createContext, useEffect, useState, useContext } from 'react';
 import { OwnerAddress } from '../ContractAddress_local';
 import SpinnerContext from '../context/SpinnerContext';
+import NotificationContext from '../context/NotificationContext';
 
 const UserContext = createContext();
 
@@ -9,6 +10,8 @@ export const UserStateProvider = ({children}) => {
     const [userAddressState, setUserAddressState] = useState()
     const [isOwnerState, setIsOwnersState] = useState()
     const { activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
+    const { updateNotificationState } = useContext(NotificationContext);
+
     let accounts = "";
 
     // useEffect(() => { connectToWallet() }, [])
@@ -35,7 +38,11 @@ export const UserStateProvider = ({children}) => {
             });
             if (accounts.length > 0) updateUserContext(accounts[0]);
         } else {
-            alert ("please install metamask extension to access this website.")
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `Please install metamask extension to access this website.`
+            });
         }
         deactivateSpinner();
     }
@@ -50,7 +57,11 @@ export const UserStateProvider = ({children}) => {
             updateUserContext(accounts[0]);
             // alert(`Your address is: ${accounts[0]}`)
         } else {
-            alert ("please install metamask extension to access this website.")
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `Please install metamask extension to access this website.`
+            });
         }
         deactivateSpinner();
     }
@@ -64,7 +75,11 @@ export const UserStateProvider = ({children}) => {
             });
             updateUserContext(accounts[0]);
         } else {
-            alert ("please install metamask extension to access this website.")
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `Please install metamask extension to access this website.`
+            });
         }
         deactivateSpinner();
     }
@@ -73,7 +88,11 @@ export const UserStateProvider = ({children}) => {
     const disconnectWallet = () => {
         setUserAddressState();
         setIsOwnersState(false);
-        alert("You are only disconnected temporarily.\nPlease discconect from your wallet to be disconnected properly.")
+        updateNotificationState(true, {
+            type: 'warning',
+            title: 'warning',
+            message: `You are only disconnected temporarily. Please discconect from your wallet to be disconnected properly.`
+        });
     }
 
     return (

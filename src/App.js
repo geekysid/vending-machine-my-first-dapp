@@ -7,6 +7,7 @@ import UserContext from './context/userContext';
 import { ContractContextProvider } from './context/ContractContext';
 import SpinnerContext from './context/SpinnerContext';
 import Spinner from './components/Spinner';
+import Notification from './components/Notification';
 
 const App = () => {
 
@@ -35,6 +36,7 @@ const App = () => {
           <Spinner />
         }
         <Navbar />
+        <Notification />
         <ContractContextProvider>
           <Home />
         </ContractContextProvider>

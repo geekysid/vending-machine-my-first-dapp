@@ -6,6 +6,7 @@
     --smallest-font: 0.70rem;
     --small-font: 0.75rem;
     --medium-font: 0.85rem;
+    --notification-font: 0.8rem;
     --big-font: 1rem;   /* used in project header*/
     --nav-height: 63px;
     --footer-height: 35px;
@@ -396,6 +397,77 @@ body {
 .vending--section--row--buyBtn > span {
     padding: 5px;
     font-weight: 600;
+}
+
+.notfication-hide {
+    display: none !important;
+}
+
+.notification {
+    /* transition: all 250ms; */
+}
+.notfication-container {
+    width: 100vw;
+    height: 40px;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--black);
+    padding: 5px 15px;
+    opacity: 0.8;
+    font-size: var(--notification-font);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.notfication--message {
+    margin-right: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+.notfication--message--text--title {
+    text-transform: uppercase;
+    font-weight: 700;
+}
+.notfication--message--text--msg {
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+.notfication--btn {
+    height: 100%;
+    border: 2px solid var(--black);
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius:5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 250ms;
+}
+.notfication--btn:hover {
+    background: var(--black);
+    color: var(--white);
+    font-weight: 700;
+}
+
+.notfication--btn--close {
+    height: 100%;
+}
+
+.notfication-success {
+    background: rgb(8,255,8);
+}
+.notfication-error {
+    background: rgb(255, 49, 49);
+    color: var(--white);
+}
+.notfication-warning {
+    background: rgb(255, 240, 31);
 }
 
 .footer-container {

@@ -5,12 +5,14 @@ import ContractInstance from '../ContractInstance';
 import web3 from 'web3';
 import { formatException } from '../utils';
 import SpinnerContext from '../context/SpinnerContext';
+import NotificationContext from '../context/NotificationContext';
 
 const ShowProducts = () => {
   const [productsState, setProductsState] = useState([]);
   const { contractData, getFilteredProductsOnStock, getFilteredProductsOnStatus, getStockFilters, getContractData } = useContext(ContractContext);
   const { userAddressState, isOwnerState } = useContext(UserContext);
   const { activateClick, deactivateClick} = useContext(SpinnerContext);
+  const { updateNotificationState } = useContext(NotificationContext);
 
   useEffect(() => {
     const activeProduct = getFilteredProductsOnStatus(contractData)
@@ -31,10 +33,18 @@ const ShowProducts = () => {
 
     // making sure product is in stock and also active
     if (orderedProduct.stockStatus === "4") {
-      alert("This product is Out of Stock currently")
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `This product is Out of Stock currently`
+      });
       return false
     } else if (orderedProduct.productStatus != "1") {
-      alert("This product is not available currently.")
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `This product is not available currently.`
+      });
       return false
     } else {
       console.log("Stock and Statue: Good to Go")
@@ -43,10 +53,18 @@ const ShowProducts = () => {
     // making sure quantity is true
     const qty = document.getElementById(`product-${productID}-qty`).value
     if (!Number.isInteger(parseFloat(qty)) || parseInt(qty) <= 0) {
-      alert(`Quantity has to be an Integer greater than 0`)
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `Quantity has to be an Integer greater than 0`
+      });
       return false
     } else if (parseInt(qty) > orderedProduct.balance) {
-      alert(`Only ${orderedProduct.balance} in stock. `)
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `Only ${orderedProduct.balance} available for purchase.`
+      });
       return false
     } else {
       console.log("Quantity: Good to Go")
@@ -62,16 +80,28 @@ const ShowProducts = () => {
       })
       console.log('Purchased' in result.events)
       if ('Purchased' in result.events) {
-        alert(`Transavtion Succeessful.\nTransactionHash: ${result.transactionHash}`);
+        updateNotificationState(true, {
+          type: 'success',
+          title: 'success',
+          message: `Transaction Succeessfull. Transaction Hash: ${result.transactionHash}`
+        });
         getContractData();
       } else {
         console.log(result);
       }
     } catch(e){
       if (e.message.includes("while formatting outputs from RPC \'")) {
-        formatException(e.message);
+        updateNotificationState(true, {
+            type: 'error',
+            title: 'error',
+            message: formatException(e.message)
+        });
       } else {
-        alert(e.message);
+        updateNotificationState(true, {
+          type: 'error',
+          title: 'error',
+          message: e.message
+        });
       }
     }
     activateClick(event.target.parentElement);
@@ -86,17 +116,29 @@ const ShowProducts = () => {
 
     // making sure product is in stock and also active
     if (orderedProduct.stockStatus === "1" || orderedProduct.stockStatus === "0") {
-      alert("Product stock is full")
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `This product already has full stock`
+      });
       return false
     }
 
     // making sure quantity is true
     const qty = document.getElementById(`product-${productID}-qty`).value
     if (!Number.isInteger(parseFloat(qty)) || parseInt(qty) <= 0) {
-      alert(`Quantity has to be an Integer greater than 0`)
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `Quantity has to be an Integer greater than 0`
+      });
       return false
     } else if (parseInt(qty) > orderedProduct.capacity-orderedProduct.balance) {
-      alert(`Product max capacity is ${orderedProduct.capacity}. So you can add maximum of ${orderedProduct.capacity-orderedProduct.balance} to current stock. `)
+      updateNotificationState(true, {
+        type: 'error',
+        title: 'error',
+        message: `Product max capacity is ${orderedProduct.capacity}. So you can add maximum of ${orderedProduct.capacity-orderedProduct.balance} to current stock. `
+      });
       return false
     }
 
@@ -108,16 +150,28 @@ const ShowProducts = () => {
       })
       console.log('ProductReStocked' in result.events)
       if ('ProductReStocked' in result.events) {
-        alert(`Transavtion Succeessful.\nTransactionHash: ${result.transactionHash}`);
+        updateNotificationState(true, {
+          type: 'success',
+          title: 'success',
+          message: `Transaction Succeessfull. Transaction Hash: ${result.transactionHash}`
+        });
         getContractData();
       } else {
         console.log(result);
       }
     } catch(e){
       if (e.message.includes("while formatting outputs from RPC \'")) {
-        formatException(e.message);
+        updateNotificationState(true, {
+            type: 'error',
+            title: 'error',
+            message: formatException(e.message)
+        });
       } else {
-        alert(e.message)
+        updateNotificationState(true, {
+          type: 'error',
+          title: 'error',
+          message: e.message
+        });
       }
     }
     activateClick(event.target.parentElement);

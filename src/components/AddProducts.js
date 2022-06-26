@@ -5,6 +5,7 @@ import ContractContext from '../context/ContractContext';
 import web3 from 'web3';
 import { formatException } from '../utils';
 import SpinnerContext from '../context/SpinnerContext';
+import NotificationContext from '../context/NotificationContext';
 
 const AddProducts = () => {
     const [ productData, setProductData ] = useState({
@@ -16,6 +17,7 @@ const AddProducts = () => {
     const { userAddressState } = useContext(UserContext);
     const { activateClick, deactivateClick } = useContext(SpinnerContext);
     const { contractData, getContractData } = useContext(ContractContext);
+    const { updateNotificationState } = useContext(NotificationContext);
 
     useEffect(() => {
         setProductData({
@@ -29,7 +31,11 @@ const AddProducts = () => {
     const validatePrice = event => {
         if (isNaN(parseFloat(event.target.value)) || parseFloat(event.target.value) <= 0) {
             event.target.value = 0;
-            alert(`${event.target.name.toUpperCase()} has to be Number greater than 0`)
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `${event.target.name.toUpperCase()} has to be Number greater than 0`
+            });
             return 0;
         } else {
             return parseFloat(event.target.value);
@@ -40,7 +46,11 @@ const AddProducts = () => {
     const validateStock = event => {
         if (!Number.isInteger(parseFloat(event.target.value)) || parseInt(event.target.value) < 1) {
             event.target.value = 0;
-            alert(`${event.target.name.toUpperCase()} has to be an Integer`)
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `${event.target.name.toUpperCase()} has to be an Integer`
+            });
             return 0;
         } else {
             return parseInt(event.target.value);
@@ -78,22 +88,42 @@ const AddProducts = () => {
                 });
 
                 if ('ProductAdded' in result.events) {
-                    alert(`Transaction Succeessful.\nTransactionHash: ${result.transactionHash}`)
+                    updateNotificationState(true, {
+                        type: 'success',
+                        title: 'success',
+                        message: `Transaction Succeessful. TransactionHash: ${result.transactionHash}`
+                    });
                     getContractData();
                 } else {
                     console.log(result);
                 }
             } catch(e){
                 if (e.message.includes("while formatting outputs from RPC \'")) {
-                    formatException(e.message);
+                    updateNotificationState(true, {
+                        type: 'error',
+                        title: 'error',
+                        message: formatException(e.message)
+                    });
                 } else if (e.code === -32603) {
-                    alert("Out of Gas")
+                    updateNotificationState(true, {
+                        type: 'error',
+                        title: 'error',
+                        message: `It seems we ran out of gas. Please increase gas and try agian`
+                    });
                 } else {
-                    alert(e.message);
+                    updateNotificationState(true, {
+                        type: 'error',
+                        title: 'error',
+                        message: `${e.message}`
+                    });
                 }
             }
         } else {
-            alert('Please input all values');
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `Please input all values`
+            });
         }
         activateClick(event.target.parentElement);
     }

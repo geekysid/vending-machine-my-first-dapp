@@ -3,6 +3,7 @@ import ContractInstance from '../ContractInstance';
 import SpinnerContext from './SpinnerContext';
 import UserContext from './userContext';
 import { formatException } from '../utils';
+import NotificationContext from './NotificationContext';
 
 const ContractContext = createContext();
 
@@ -11,6 +12,7 @@ export const ContractContextProvider = ({children}) => {
     const [contractBalance, setContractBalance] = useState(0);
     const { activateSpinner, deactivateSpinner } = useContext(SpinnerContext);
     const { isOwnerState, userAddressState } = useContext(UserContext);
+    const { updateNotificationState } = useContext(NotificationContext);
 
     const fetchContractBalance = async () => {
         activateSpinner();
@@ -149,25 +151,49 @@ export const ContractContextProvider = ({children}) => {
                         gas: 5500000
                     });
                     if ('WithdrawSuccessfull' in result.events) {
-                        alert(`Transaction Succeessful.\nTransactionHash: ${result.transactionHash}`)
+                        updateNotificationState(true, {
+                          type: 'success',
+                          title: 'success',
+                          message: `Transaction Succeessfull. Transaction Hash: ${result.transactionHash}`
+                        });
                         fetchContractBalance();
                     } else {
                         console.log(result);
                     }
                 } catch(e){
                     if (e.message.includes("while formatting outputs from RPC \'")) {
-                        formatException(e.message);
+                        updateNotificationState(true, {
+                            type: 'error',
+                            title: 'error',
+                            message: formatException(e.message)
+                        });
                     } else if (e.code === -32603) {
-                        alert("Out of Gas")
+                        updateNotificationState(true, {
+                            type: 'error',
+                            title: 'error',
+                            message: `It seems we ran out of gas. Please increase gas and try agian`
+                        });
                     } else {
-                        alert(e.message);
+                        updateNotificationState(true, {
+                            type: 'error',
+                            title: 'error',
+                            message: e.message
+                        });
                     }
                 }
             } else {
-                alert("No balance in contract to withdraw");
+                updateNotificationState(true, {
+                    type: 'error',
+                    title: 'error',
+                    message: `No balance in contract to withdraw`
+                });
             }
         } else {
-            alert("Only Owner is allowed to execute this function");
+            updateNotificationState(true, {
+                type: 'error',
+                title: 'error',
+                message: `Only Owner is allowed to execute this function`
+            });
         }
         deactivateSpinner();
     }
